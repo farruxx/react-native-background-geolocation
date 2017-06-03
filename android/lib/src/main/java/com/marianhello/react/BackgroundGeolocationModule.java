@@ -1,5 +1,6 @@
 package com.marianhello.react;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentName;
@@ -16,6 +17,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 
 import com.facebook.react.bridge.Arguments;
@@ -55,6 +57,7 @@ public class BackgroundGeolocationModule extends ReactContextBaseJavaModule impl
     public static final String STATIONARY_EVENT = "stationary";
     public static final String ERROR_EVENT = "error";
     private static final Integer MESSENGER_CLIENT_ID = 666;
+    private static final int PERMISSION_REQUEST_CODE = 33;
 
     /** Messenger for communicating with the service. */
     private Messenger mService = null;
