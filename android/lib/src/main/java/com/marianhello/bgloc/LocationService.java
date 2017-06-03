@@ -110,7 +110,6 @@ public class LocationService extends Service {
     private LocationProvider provider;
     private Account syncAccount;
     private Boolean hasConnectivity = true;
-
     private org.slf4j.Logger log;
 
     private volatile HandlerThread handlerThread;

@@ -17,6 +17,7 @@ public class BackgroundLocation implements Parcelable {
     private String provider;
     private double latitude = 0.0;
     private double longitude = 0.0;
+    private double deltaDistance = 0.0;
     private long time = 0;
     private long elapsedRealtimeNanos = 0;
     private float accuracy = 0.0f;
@@ -118,6 +119,7 @@ public class BackgroundLocation implements Parcelable {
         provider = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
+        deltaDistance = in.readDouble();
         time = in.readLong();
         elapsedRealtimeNanos = in.readLong();
         accuracy = in.readFloat();
@@ -148,6 +150,7 @@ public class BackgroundLocation implements Parcelable {
         dest.writeString(provider);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
+        dest.writeDouble(deltaDistance);
         dest.writeLong(time);
         dest.writeLong(elapsedRealtimeNanos);
         dest.writeFloat(accuracy);
@@ -458,6 +461,14 @@ public class BackgroundLocation implements Parcelable {
         this.hasRadius = true;
     }
 
+    public double getDeltaDistance() {
+        return deltaDistance;
+    }
+
+    public void setDeltaDistance(double deltaDistance) {
+        this.deltaDistance = deltaDistance;
+    }
+
     /**
      * True if this location has an accuracy.
      *
@@ -694,6 +705,7 @@ public class BackgroundLocation implements Parcelable {
             s.append(" {").append(extras).append('}');
         }
         s.append(" locprov=").append(locationProvider);
+        s.append(" delta=").append(deltaDistance);
         s.append("]");
 
         return s.toString();
@@ -709,6 +721,7 @@ public class BackgroundLocation implements Parcelable {
         json.put("time", time);
         json.put("latitude", latitude);
         json.put("longitude", longitude);
+        json.put("deltaDistance", deltaDistance);
         if (hasAccuracy) json.put("accuracy", accuracy);
         if (hasSpeed) json.put("speed", speed);
         if (hasAltitude) json.put("altitude", altitude);
