@@ -55,6 +55,7 @@ public class SQLiteLocationDAO implements LocationDAO {
       LocationEntry.COLUMN_NAME_RADIUS,
       LocationEntry.COLUMN_NAME_LATITUDE,
       LocationEntry.COLUMN_NAME_LONGITUDE,
+      LocationEntry.COLUMN_NAME_DELTA_DISTANCE,
       LocationEntry.COLUMN_NAME_HAS_ACCURACY,
       LocationEntry.COLUMN_NAME_HAS_SPEED,
       LocationEntry.COLUMN_NAME_HAS_BEARING,
@@ -176,6 +177,7 @@ public class SQLiteLocationDAO implements LocationDAO {
             .append(LocationEntry.COLUMN_NAME_ALTITUDE).append("= ?,")
             .append(LocationEntry.COLUMN_NAME_RADIUS).append("= ?,")
             .append(LocationEntry.COLUMN_NAME_LATITUDE).append("= ?,")
+            .append(LocationEntry.COLUMN_NAME_DELTA_DISTANCE).append("= ?,")
             .append(LocationEntry.COLUMN_NAME_LONGITUDE).append("= ?,")
             .append(LocationEntry.COLUMN_NAME_HAS_ACCURACY).append("= ?,")
             .append(LocationEntry.COLUMN_NAME_HAS_SPEED).append("= ?,")
@@ -199,6 +201,7 @@ public class SQLiteLocationDAO implements LocationDAO {
             location.getRadius(),
             location.getLatitude(),
             location.getLongitude(),
+            location.getDeltaDistance(),
             location.hasAccuracy() ? 1 : 0,
             location.hasSpeed() ? 1 : 0,
             location.hasBearing() ? 1 : 0,
@@ -266,6 +269,7 @@ public class SQLiteLocationDAO implements LocationDAO {
     }
     l.setLatitude(c.getDouble(c.getColumnIndex(LocationEntry.COLUMN_NAME_LATITUDE)));
     l.setLongitude(c.getDouble(c.getColumnIndex(LocationEntry.COLUMN_NAME_LONGITUDE)));
+    l.setDeltaDistance(c.getDouble(c.getColumnIndex(LocationEntry.COLUMN_NAME_DELTA_DISTANCE)));
     l.setLocationProvider(c.getInt(c.getColumnIndex(LocationEntry.COLUMN_NAME_LOCATION_PROVIDER)));
     l.setBatchStartMillis(c.getLong(c.getColumnIndex(LocationEntry.COLUMN_NAME_BATCH_START_MILLIS)));
     l.setValid(c.getInt(c.getColumnIndex(LocationEntry.COLUMN_NAME_VALID)) != 0);
@@ -285,6 +289,7 @@ public class SQLiteLocationDAO implements LocationDAO {
     values.put(LocationEntry.COLUMN_NAME_RADIUS, l.getRadius());
     values.put(LocationEntry.COLUMN_NAME_LATITUDE, l.getLatitude());
     values.put(LocationEntry.COLUMN_NAME_LONGITUDE, l.getLongitude());
+    values.put(LocationEntry.COLUMN_NAME_DELTA_DISTANCE, l.getDeltaDistance());
     values.put(LocationEntry.COLUMN_NAME_HAS_ACCURACY, l.hasAccuracy() ? 1 : 0);
     values.put(LocationEntry.COLUMN_NAME_HAS_SPEED, l.hasSpeed() ? 1 : 0);
     values.put(LocationEntry.COLUMN_NAME_HAS_BEARING, l.hasBearing() ? 1 : 0);

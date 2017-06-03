@@ -131,6 +131,7 @@ public class BackgroundGeolocationModule extends ReactContextBaseJavaModule impl
                         out.putDouble("time", new Long(location.getTime()).doubleValue());
                         out.putDouble("latitude", location.getLatitude());
                         out.putDouble("longitude", location.getLongitude());
+                        out.putDouble("deltaDistance", location.getDeltaDistance());
                         out.putDouble("accuracy", location.getAccuracy());
                         out.putDouble("speed", location.getSpeed());
                         out.putDouble("altitude", location.getAltitude());
@@ -350,6 +351,7 @@ public class BackgroundGeolocationModule extends ReactContextBaseJavaModule impl
                 out.putDouble("time", new Long(location.getTime()).doubleValue());
                 out.putDouble("latitude", location.getLatitude());
                 out.putDouble("longitude", location.getLongitude());
+                out.putDouble("deltaDistance", location.getDeltaDistance());
                 out.putDouble("accuracy", location.getAccuracy());
                 out.putDouble("speed", location.getSpeed());
                 out.putDouble("altitude", location.getAltitude());

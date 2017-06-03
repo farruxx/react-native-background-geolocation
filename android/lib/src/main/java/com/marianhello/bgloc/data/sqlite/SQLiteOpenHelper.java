@@ -13,8 +13,8 @@ import java.util.ArrayList;
 
 public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
     private static final String TAG = SQLiteOpenHelper.class.getName();
-    public static final String SQLITE_DATABASE_NAME = "cordova_bg_geolocation.db";
-    public static final int DATABASE_VERSION = 12;
+    public static final String SQLITE_DATABASE_NAME = "react_bg_geolocation.db";
+    public static final int DATABASE_VERSION = 13;
 
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
@@ -31,6 +31,7 @@ public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
         LocationEntry.COLUMN_NAME_ALTITUDE + REAL_TYPE + COMMA_SEP +
         LocationEntry.COLUMN_NAME_LATITUDE + REAL_TYPE + COMMA_SEP +
         LocationEntry.COLUMN_NAME_LONGITUDE + REAL_TYPE + COMMA_SEP +
+        LocationEntry.COLUMN_NAME_DELTA_DISTANCE + REAL_TYPE + COMMA_SEP +
         LocationEntry.COLUMN_NAME_RADIUS + REAL_TYPE + COMMA_SEP +
         LocationEntry.COLUMN_NAME_HAS_ACCURACY + INTEGER_TYPE + COMMA_SEP +
         LocationEntry.COLUMN_NAME_HAS_SPEED + INTEGER_TYPE + COMMA_SEP +

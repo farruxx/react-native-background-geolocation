@@ -18,6 +18,7 @@ public final class SQLiteLocationContract {
         public static final String COLUMN_NAME_ALTITUDE = "altitude";
         public static final String COLUMN_NAME_LATITUDE = "latitude";
         public static final String COLUMN_NAME_LONGITUDE = "longitude";
+        public static final String COLUMN_NAME_DELTA_DISTANCE = "delta_distance";
         public static final String COLUMN_NAME_RADIUS = "radius";
         public static final String COLUMN_NAME_HAS_ACCURACY = "has_accuracy";
         public static final String COLUMN_NAME_HAS_SPEED = "has_speed";
