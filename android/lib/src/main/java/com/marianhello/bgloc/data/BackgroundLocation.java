@@ -10,6 +10,11 @@ import android.support.v4.util.TimeUtils;
 import org.json.JSONObject;
 import org.json.JSONException;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
 public class BackgroundLocation implements Parcelable {
     private Long locationId = null;
     private Integer locationProvider = null;
@@ -35,6 +40,13 @@ public class BackgroundLocation implements Parcelable {
     private Bundle extras = null;
 
     private static final long TWO_MINUTES_IN_NANOS = 1000000000L * 60 * 2;
+
+    private static final SimpleDateFormat sdf;
+
+    static{
+        sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+    }
 
     public BackgroundLocation() {}
 
@@ -717,17 +729,17 @@ public class BackgroundLocation implements Parcelable {
      */
     public JSONObject toJSONObject() throws JSONException {
         JSONObject json = new JSONObject();
-        json.put("provider", provider);
-        json.put("time", time);
-        json.put("latitude", latitude);
-        json.put("longitude", longitude);
-        json.put("deltaDistance", deltaDistance);
-        if (hasAccuracy) json.put("accuracy", accuracy);
-        if (hasSpeed) json.put("speed", speed);
-        if (hasAltitude) json.put("altitude", altitude);
-        if (hasBearing) json.put("bearing", bearing);
-        if (hasRadius) json.put("radius", radius);
-        json.put("locationProvider", locationProvider);
+//        json.put("provider", provider);
+        json.put("DriverTrack[time]", sdf.format(new Date(time)));
+        json.put("DriverTrack[latitude]", latitude);
+        json.put("DriverTrack[longitude]", longitude);
+        json.put("DriverTrack[delta_distance]", deltaDistance);
+        if (hasAccuracy) json.put("DriverTrack[accuracy]", accuracy);
+        if (hasSpeed) json.put("DriverTrack[speed]", speed);
+        if (hasAltitude) json.put("DriverTrack[altitude]", altitude);
+        if (hasBearing) json.put("DriverTrack[bearing]", bearing);
+//        if (hasRadius) json.put("radius", radius);
+//        json.put("locationProvider", locationProvider);
 
         return json;
   	}
