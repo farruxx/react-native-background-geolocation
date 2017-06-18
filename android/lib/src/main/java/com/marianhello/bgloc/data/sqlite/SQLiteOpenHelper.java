@@ -25,6 +25,7 @@ public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
         "CREATE TABLE " + LocationEntry.TABLE_NAME + " (" +
         LocationEntry._ID + " INTEGER PRIMARY KEY," +
         LocationEntry.COLUMN_NAME_TIME + INTEGER_TYPE + COMMA_SEP +
+        LocationEntry.COLUMN_NAME_DELTA_TIME + INTEGER_TYPE + COMMA_SEP +
         LocationEntry.COLUMN_NAME_ACCURACY + REAL_TYPE + COMMA_SEP +
         LocationEntry.COLUMN_NAME_SPEED + REAL_TYPE + COMMA_SEP +
         LocationEntry.COLUMN_NAME_BEARING + REAL_TYPE + COMMA_SEP +

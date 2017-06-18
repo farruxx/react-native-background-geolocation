@@ -15,17 +15,24 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by finch on 20/07/16.
  */
 public class BatchManager {
+    private final SimpleDateFormat sdf;
     private Context context;
     private org.slf4j.Logger log;
 
     public BatchManager(Context context) {
         log = LoggerManager.getLogger(BatchManager.class);
         this.context = context;
+        sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss",Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
     public File createBatch(Long batchStartMillis, Integer syncThreshold) throws IOException {
@@ -40,6 +47,8 @@ public class BatchManager {
                 SQLiteLocationContract.LocationEntry.COLUMN_NAME_TIME,
                 SQLiteLocationContract.LocationEntry.COLUMN_NAME_LATITUDE,
                 SQLiteLocationContract.LocationEntry.COLUMN_NAME_LONGITUDE,
+                SQLiteLocationContract.LocationEntry.COLUMN_NAME_DELTA_DISTANCE,
+                SQLiteLocationContract.LocationEntry.COLUMN_NAME_DELTA_TIME,
                 SQLiteLocationContract.LocationEntry.COLUMN_NAME_ACCURACY,
                 SQLiteLocationContract.LocationEntry.COLUMN_NAME_SPEED,
                 SQLiteLocationContract.LocationEntry.COLUMN_NAME_BEARING,
@@ -91,15 +100,19 @@ public class BatchManager {
             while (cursor.moveToNext()) {
                 writer.beginObject();
                 String provider = cursor.getString(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_PROVIDER));
-                Long time = cursor.getLong(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_TIME));
+                String time = sdf.format(new Date(cursor.getLong(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_TIME))));
+                long deltaTime= cursor.getLong(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_DELTA_TIME));
                 Double latitude = cursor.getDouble(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_LATITUDE));
                 Double longitude = cursor.getDouble(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_LONGITUDE));
+                Double delta_distance = cursor.getDouble(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_DELTA_DISTANCE));
                 Integer locationProvider = cursor.getInt(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_LOCATION_PROVIDER));
 
                 if (provider != null) writer.name("provider").value(provider);
                 if (time != null) writer.name("time").value(time);
+                writer.name("delta_time").value(time);
                 if (latitude != null) writer.name("latitude").value(latitude);
                 if (longitude != null) writer.name("longitude").value(longitude);
+                if (delta_distance != null) writer.name("delta_distance").value(delta_distance);
                 if (cursor.getInt(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_HAS_ACCURACY)) == 1) {
                     writer.name("accuracy").value(cursor.getFloat(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_ACCURACY)));
                 }
@@ -107,7 +120,7 @@ public class BatchManager {
                     writer.name("speed").value(cursor.getFloat(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_SPEED)));
                 }
                 if (cursor.getInt(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_HAS_BEARING)) == 1) {
-                    writer.name("bearing").value(cursor.getFloat(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_BEARING)));
+                    writer.name("rotation").value(cursor.getFloat(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_BEARING)));
                 }
                 if (cursor.getInt(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_HAS_ALTITUDE)) == 1) {
                     writer.name("altitude").value(cursor.getDouble(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_ALTITUDE)));

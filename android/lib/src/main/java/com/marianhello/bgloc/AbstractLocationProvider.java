@@ -87,6 +87,7 @@ public abstract class AbstractLocationProvider implements LocationProvider {
         BackgroundLocation backgroundLocation = new BackgroundLocation(PROVIDER_ID, location);
         if (lastBackgroundLocation != null && isFreshLocation(lastBackgroundLocation)) {
             backgroundLocation.setDeltaDistance(getDistance(backgroundLocation, lastBackgroundLocation));
+            backgroundLocation.setDeltaTime(backgroundLocation.getTime()- lastBackgroundLocation.getTime());
         }
         locationService.handleLocation(backgroundLocation);
         lastBackgroundLocation = backgroundLocation;

@@ -23,6 +23,7 @@ public class BackgroundLocation implements Parcelable {
     private double latitude = 0.0;
     private double longitude = 0.0;
     private double deltaDistance = 0.0;
+    private long deltaTime = 0;
     private long time = 0;
     private long elapsedRealtimeNanos = 0;
     private float accuracy = 0.0f;
@@ -133,6 +134,7 @@ public class BackgroundLocation implements Parcelable {
         longitude = in.readDouble();
         deltaDistance = in.readDouble();
         time = in.readLong();
+        deltaTime = in.readLong();
         elapsedRealtimeNanos = in.readLong();
         accuracy = in.readFloat();
         speed = in.readFloat();
@@ -164,6 +166,7 @@ public class BackgroundLocation implements Parcelable {
         dest.writeDouble(longitude);
         dest.writeDouble(deltaDistance);
         dest.writeLong(time);
+        dest.writeLong(deltaTime);
         dest.writeLong(elapsedRealtimeNanos);
         dest.writeFloat(accuracy);
         dest.writeFloat(speed);
@@ -189,7 +192,7 @@ public class BackgroundLocation implements Parcelable {
             return new BackgroundLocation[size];
         }
     };
-    
+
     public BackgroundLocation makeClone() {
         return new BackgroundLocation(this);
     }
@@ -519,6 +522,14 @@ public class BackgroundLocation implements Parcelable {
         return hasRadius;
     }
 
+    public long getDeltaTime() {
+        return deltaTime;
+    }
+
+    public void setDeltaTime(long deltaTime) {
+        this.deltaTime = deltaTime;
+    }
+
     /**
      * Returns true if the Location came from a mock provider.
      *
@@ -730,19 +741,20 @@ public class BackgroundLocation implements Parcelable {
     public JSONObject toJSONObject() throws JSONException {
         JSONObject json = new JSONObject();
 //        json.put("provider", provider);
-        json.put("DriverTrack[time]", sdf.format(new Date(time)));
-        json.put("DriverTrack[latitude]", latitude);
-        json.put("DriverTrack[longitude]", longitude);
-        json.put("DriverTrack[delta_distance]", deltaDistance);
-        if (hasAccuracy) json.put("DriverTrack[accuracy]", accuracy);
-        if (hasSpeed) json.put("DriverTrack[speed]", speed);
-        if (hasAltitude) json.put("DriverTrack[altitude]", altitude);
-        if (hasBearing) json.put("DriverTrack[bearing]", bearing);
+        json.put("time", sdf.format(new Date(time)));
+        json.put("latitude", latitude);
+        json.put("longitude", longitude);
+        json.put("delta_distance", deltaDistance);
+        json.put("delta_time", deltaTime);
+        if (hasAccuracy) json.put("accuracy", accuracy);
+        if (hasSpeed) json.put("speed", speed);
+        if (hasAltitude) json.put("altitude", altitude);
+        if (hasBearing) json.put("bearing", bearing);
 //        if (hasRadius) json.put("radius", radius);
 //        json.put("locationProvider", locationProvider);
 
         return json;
-  	}
+    }
 
     /**
      * Returns location as JSON object containing location id

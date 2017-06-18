@@ -12,6 +12,7 @@ public final class SQLiteLocationContract {
         public static final String TABLE_NAME = "location";
         public static final String COLUMN_NAME_NULLABLE = "NULLHACK";
         public static final String COLUMN_NAME_TIME = "time";
+        public static final String COLUMN_NAME_DELTA_TIME = "delta_time";
         public static final String COLUMN_NAME_ACCURACY = "accuracy";
         public static final String COLUMN_NAME_SPEED = "speed";
         public static final String COLUMN_NAME_BEARING = "bearing";

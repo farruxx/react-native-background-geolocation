@@ -48,6 +48,7 @@ public class SQLiteLocationDAO implements LocationDAO {
       LocationEntry._ID,
       LocationEntry.COLUMN_NAME_PROVIDER,
       LocationEntry.COLUMN_NAME_TIME,
+      LocationEntry.COLUMN_NAME_DELTA_TIME,
       LocationEntry.COLUMN_NAME_ACCURACY,
       LocationEntry.COLUMN_NAME_SPEED,
       LocationEntry.COLUMN_NAME_BEARING,
@@ -171,6 +172,7 @@ public class SQLiteLocationDAO implements LocationDAO {
             .append(LocationEntry.TABLE_NAME).append(" SET ")
             .append(LocationEntry.COLUMN_NAME_PROVIDER).append("= ?,")
             .append(LocationEntry.COLUMN_NAME_TIME).append("= ?,")
+            .append(LocationEntry.COLUMN_NAME_DELTA_TIME).append("= ?,")
             .append(LocationEntry.COLUMN_NAME_ACCURACY).append("= ?,")
             .append(LocationEntry.COLUMN_NAME_SPEED).append("= ?,")
             .append(LocationEntry.COLUMN_NAME_BEARING).append("= ?,")
@@ -194,6 +196,7 @@ public class SQLiteLocationDAO implements LocationDAO {
     db.execSQL(sql, new Object[] {
             location.getProvider(),
             location.getTime(),
+            location.getDeltaTime(),
             location.getAccuracy(),
             location.getSpeed(),
             location.getBearing(),
@@ -252,6 +255,7 @@ public class SQLiteLocationDAO implements LocationDAO {
   private BackgroundLocation hydrate(Cursor c) {
     BackgroundLocation l = new BackgroundLocation(c.getString(c.getColumnIndex(LocationEntry.COLUMN_NAME_PROVIDER)));
     l.setTime(c.getLong(c.getColumnIndex(LocationEntry.COLUMN_NAME_TIME)));
+    l.setDeltaTime(c.getLong(c.getColumnIndex(LocationEntry.COLUMN_NAME_DELTA_TIME)));
     if (c.getInt(c.getColumnIndex(LocationEntry.COLUMN_NAME_HAS_ACCURACY)) == 1) {
       l.setAccuracy(c.getFloat(c.getColumnIndex(LocationEntry.COLUMN_NAME_ACCURACY)));
     }
@@ -282,6 +286,7 @@ public class SQLiteLocationDAO implements LocationDAO {
     ContentValues values = new ContentValues();
     values.put(LocationEntry.COLUMN_NAME_PROVIDER, l.getProvider());
     values.put(LocationEntry.COLUMN_NAME_TIME, l.getTime());
+    values.put(LocationEntry.COLUMN_NAME_DELTA_TIME, l.getDeltaTime());
     values.put(LocationEntry.COLUMN_NAME_ACCURACY, l.getAccuracy());
     values.put(LocationEntry.COLUMN_NAME_SPEED, l.getSpeed());
     values.put(LocationEntry.COLUMN_NAME_BEARING, l.getBearing());
