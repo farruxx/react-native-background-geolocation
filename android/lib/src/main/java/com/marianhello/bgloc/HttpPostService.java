@@ -57,7 +57,7 @@ public class HttpPostService {
     public static int postFile(String url, File file, Map headers, UploadingCallback callback) throws IOException {
         HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
 
-        conn.setDoInput(false);
+        conn.setDoInput(true);
         conn.setDoOutput(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             conn.setFixedLengthStreamingMode(file.length());
@@ -99,7 +99,17 @@ public class HttpPostService {
                 is.close();
             }
         }
-
+        InputStream is1 = conn.getInputStream();
+        BufferedReader rd = new BufferedReader(new InputStreamReader(is1));
+        String line;
+        StringBuffer response = new StringBuffer();
+        while((line = rd.readLine()) != null) {
+            response.append(line);
+            response.append('\r');
+        }
+        rd.close();
+        String string = response.toString();
+        Log.e("RESPONSE", string);
         return conn.getResponseCode();
     }
 }

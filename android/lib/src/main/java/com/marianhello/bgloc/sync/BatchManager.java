@@ -113,6 +113,7 @@ public class BatchManager {
                 if (latitude != null) writer.name("latitude").value(latitude);
                 if (longitude != null) writer.name("longitude").value(longitude);
                 if (delta_distance != null) writer.name("delta_distance").value(delta_distance);
+                writer.name("delta_time").value(deltaTime);
                 if (cursor.getInt(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_HAS_ACCURACY)) == 1) {
                     writer.name("accuracy").value(cursor.getFloat(cursor.getColumnIndex(SQLiteLocationContract.LocationEntry.COLUMN_NAME_ACCURACY)));
                 }

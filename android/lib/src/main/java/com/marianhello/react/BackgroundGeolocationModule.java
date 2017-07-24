@@ -298,14 +298,14 @@ public class BackgroundGeolocationModule extends ReactContextBaseJavaModule impl
     }
 
     @ReactMethod
-    public void isLocationEnabled(Callback success, Callback error) {
+    public void isLocationEnabled(Callback success) {
         log.debug("Location services enabled check");
         try {
             int isLocationEnabled = isLocationEnabled(getContext()) ? 1 : 0;
             success.invoke(isLocationEnabled);
         } catch (SettingNotFoundException e) {
             log.error("Location service checked failed: {}", e.getMessage());
-            error.invoke("Location setting error occured");
+            success.invoke(0);
         }
     }
 

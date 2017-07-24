@@ -43,10 +43,9 @@ var BackgroundGeolocation = {
     RNBackgroundGeolocation.stop(successFn, errorFn);
   },
 
-  isLocationEnabled: function(successFn, errorFn) {
+  isLocationEnabled: function(successFn) {
     successFn = successFn || emptyFn;
-    errorFn = errorFn || emptyFn;
-    RNBackgroundGeolocation.isLocationEnabled(successFn, errorFn);
+    RNBackgroundGeolocation.isLocationEnabled(successFn);
   },
 
   showAppSettings: function() {
