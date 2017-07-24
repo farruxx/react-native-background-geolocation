@@ -53,6 +53,8 @@
     @COMMA_SEP @LC_COLUMN_NAME_LONGITUDE
     @COMMA_SEP @LC_COLUMN_NAME_PROVIDER
     @COMMA_SEP @LC_COLUMN_NAME_LOCATION_PROVIDER
+    @COMMA_SEP @LC_COLUMN_NAME_DELTA_TIME
+    @COMMA_SEP @LC_COLUMN_NAME_DELTA_DISTANCE
     @" FROM " @LC_TABLE_NAME @" WHERE " @LC_COLUMN_NAME_VALID @" = 1 ORDER BY " @LC_COLUMN_NAME_TIME;
     
     [queue inDatabase:^(FMDatabase *database) {
@@ -70,6 +72,8 @@
             location.longitude = [NSNumber numberWithDouble:[rs doubleForColumnIndex:7]];
             location.provider = [rs stringForColumnIndex:8];
             location.serviceProvider = [NSNumber numberWithInt:[rs intForColumnIndex:9]];
+            location.delta_time = [NSNumber numberWithInt:[rs intForColumnIndex:10]];
+            location.delta_distance = [NSNumber numberWithInt:[rs intForColumnIndex:11]];
             
             [locations addObject:location];
         }
@@ -98,6 +102,8 @@
     @COMMA_SEP @LC_COLUMN_NAME_PROVIDER
     @COMMA_SEP @LC_COLUMN_NAME_LOCATION_PROVIDER
     @COMMA_SEP @LC_COLUMN_NAME_VALID
+    @COMMA_SEP @LC_COLUMN_NAME_DELTA_TIME
+    @COMMA_SEP @LC_COLUMN_NAME_DELTA_DISTANCE
     @" FROM " @LC_TABLE_NAME @" ORDER BY " @LC_COLUMN_NAME_TIME;
     
     [queue inDatabase:^(FMDatabase *database) {
@@ -116,6 +122,8 @@
             location.provider = [rs stringForColumnIndex:8];
             location.serviceProvider = [NSNumber numberWithInt:[rs intForColumnIndex:9]];
             location.isValid = [rs intForColumnIndex:10] == 1 ? YES : NO;
+            location.delta_time = [NSNumber numberWithInt:[rs intForColumnIndex:11]];
+            location.delta_distance = [NSNumber numberWithInt:[rs intForColumnIndex:12]];
             
             [locations addObject:location];
         }
@@ -144,6 +152,8 @@
         @COMMA_SEP @LC_COLUMN_NAME_LONGITUDE
         @COMMA_SEP @LC_COLUMN_NAME_PROVIDER
         @COMMA_SEP @LC_COLUMN_NAME_LOCATION_PROVIDER
+        @COMMA_SEP @LC_COLUMN_NAME_DELTA_TIME
+        @COMMA_SEP @LC_COLUMN_NAME_DELTA_DISTANCE
         @" FROM " @LC_TABLE_NAME @" WHERE " @LC_COLUMN_NAME_VALID @" = 1 ORDER BY " @LC_COLUMN_NAME_TIME;
 
         FMResultSet *rs = [database executeQuery:sql];
@@ -160,6 +170,8 @@
             location.longitude = [NSNumber numberWithDouble:[rs doubleForColumnIndex:7]];
             location.provider = [rs stringForColumnIndex:8];
             location.serviceProvider = [NSNumber numberWithInt:[rs intForColumnIndex:9]];
+            location.delta_time = [NSNumber numberWithInt:[rs intForColumnIndex:10]];
+            location.delta_distance = [NSNumber numberWithInt:[rs intForColumnIndex:11]];
             
             [locations addObject:location];
         }
@@ -207,7 +219,9 @@
     @COMMA_SEP @LC_COLUMN_NAME_PROVIDER
     @COMMA_SEP @LC_COLUMN_NAME_LOCATION_PROVIDER
     @COMMA_SEP @LC_COLUMN_NAME_VALID
-    @") VALUES (?,?,?,?,?,?,?,?,?,?)";
+    @COMMA_SEP @LC_COLUMN_NAME_DELTA_TIME
+    @COMMA_SEP @LC_COLUMN_NAME_DELTA_DISTANCE
+    @") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
     
     BOOL success = [database executeUpdate:sql,
         [NSNumber numberWithDouble:[location.time timeIntervalSince1970]],
@@ -219,7 +233,10 @@
         location.longitude,
         location.provider ?: [NSNull null],
         location.serviceProvider ?: [NSNull null],
-        location.isValid == YES ? @(1) : @(0)
+        location.isValid == YES ? @(1) : @(0),
+        location.delta_time,
+        location.delta_distance
+                    
     ];
     
     if (success) {
@@ -278,6 +295,8 @@
         @COMMA_SEP @LC_COLUMN_NAME_PROVIDER @EQ_BIND
         @COMMA_SEP @LC_COLUMN_NAME_LOCATION_PROVIDER @EQ_BIND
         @COMMA_SEP @LC_COLUMN_NAME_VALID @EQ_BIND
+        @COMMA_SEP @LC_COLUMN_NAME_DELTA_TIME @EQ_BIND
+        @COMMA_SEP @LC_COLUMN_NAME_DELTA_DISTANCE @EQ_BIND
         @" WHERE " @LC_COLUMN_NAME_TIME @" = (SELECT min(" @LC_COLUMN_NAME_TIME @") FROM " @LC_TABLE_NAME @")";
 
         BOOL success = [database executeUpdate:sql,
@@ -290,7 +309,9 @@
             location.longitude,
             location.provider ?: [NSNull null],
             location.serviceProvider ?: [NSNull null],
-            location.isValid == YES ? @(1) : @(0)
+            location.isValid == YES ? @(1) : @(0),
+            location.delta_time,
+            location.delta_distance
         ];
         
         if (success) {

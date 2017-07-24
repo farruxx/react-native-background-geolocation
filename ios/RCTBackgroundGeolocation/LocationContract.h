@@ -17,6 +17,8 @@
 #define LC_COLUMN_NAME_SPEED               "speed"
 #define LC_COLUMN_NAME_BEARING             "bearing"
 #define LC_COLUMN_NAME_ALTITUDE            "altitude"
+#define LC_COLUMN_NAME_DELTA_TIME            "delta_time"
+#define LC_COLUMN_NAME_DELTA_DISTANCE            "delta_distance"
 #define LC_COLUMN_NAME_LATITUDE            "latitude"
 #define LC_COLUMN_NAME_LONGITUDE           "longitude"
 #define LC_COLUMN_NAME_PROVIDER            "provider"

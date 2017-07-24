@@ -21,12 +21,14 @@
 @property (nonatomic, retain) NSNumber *altitude;
 @property (nonatomic, retain) NSNumber *latitude;
 @property (nonatomic, retain) NSNumber *longitude;
+@property (nonatomic, retain) NSNumber *delta_distance;
+@property (nonatomic, retain) NSNumber *delta_time;
 @property (nonatomic, retain) NSString *provider;
 @property (nonatomic, retain) NSNumber *serviceProvider;
 @property (nonatomic, retain) NSString *type;
 @property (nonatomic) BOOL isValid;
 
-+ (instancetype) fromCLLocation:(CLLocation*)location;
++ (instancetype) fromCLLocation:(CLLocation*)location lastLocation:(Location*)lastLocation;
 + (NSTimeInterval) locationAge:(CLLocation*)location;
 + (NSMutableDictionary*) toDictionary:(CLLocation*)location;;
 - (NSTimeInterval) locationAge;

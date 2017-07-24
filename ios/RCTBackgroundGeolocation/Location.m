@@ -15,9 +15,9 @@ enum {
 
 @implementation Location
 
-@synthesize id, time, accuracy, altitudeAccuracy, speed, heading, altitude, latitude, longitude, provider, serviceProvider, type, isValid;
+@synthesize id, time, accuracy, altitudeAccuracy, speed, heading, altitude, latitude, longitude, provider, serviceProvider, type, isValid, delta_distance, delta_time;
 
-+ (instancetype) fromCLLocation:(CLLocation*)location;
++ (instancetype) fromCLLocation:(CLLocation*)location lastLocation: (Location*)lastLocation;
 {
     Location *instance = [[Location alloc] init];
     
@@ -29,7 +29,13 @@ enum {
     instance.altitude = [NSNumber numberWithDouble:location.altitude];
     instance.latitude = [NSNumber numberWithDouble:location.coordinate.latitude];
     instance.longitude = [NSNumber numberWithDouble:location.coordinate.longitude];
-    
+    if(lastLocation != nil){
+        NSNumber * delta_time2=  [NSNumber numberWithInt: ((long)(NSTimeInterval)([[NSDate date] timeIntervalSince1970])- [lastLocation.time timeIntervalSince1970]) * 1000];
+        if(delta_time2.intValue < 5*60*1000){
+            instance.delta_distance = [NSNumber numberWithInt: [instance distanceFromLocation:lastLocation]];
+            instance.delta_time = delta_time2;
+        }
+    }
     return instance;
 }
 
@@ -92,8 +98,11 @@ enum {
 - (NSMutableDictionary*) toDictionary
 {
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:10];
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"Etc/Greenwich"]];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     
-    if (time != nil) [dict setObject:[NSNumber numberWithDouble:([time timeIntervalSince1970] * 1000)] forKey:@"time"];
+    if (time != nil) [dict setObject:[dateFormatter stringFromDate:time] forKey:@"time"];
     if (accuracy != nil) [dict setObject:accuracy forKey:@"accuracy"];
     if (altitudeAccuracy != nil) [dict setObject:altitudeAccuracy forKey:@"altitudeAccuracy"];
     if (speed != nil) [dict setObject:speed forKey:@"speed"];
@@ -104,6 +113,19 @@ enum {
     if (provider != nil) [dict setObject:provider forKey:@"provider"];
     if (serviceProvider != nil) [dict setObject:serviceProvider forKey:@"service_provider"];
     if (type != nil) [dict setObject:type forKey:@"location_type"];
+    if (delta_distance != nil) {
+        [dict setObject:delta_distance forKey:@"delta_distance"];
+    }else{
+        [dict setObject: [NSNumber numberWithInt:0] forKey:@"delta_distance"];
+    }
+    
+    if (delta_time != nil){
+        [dict setObject:delta_time forKey:@"delta_time"];
+    }else{
+        [dict setObject: [NSNumber numberWithInt:0] forKey:@"delta_time"];
+        
+    }
+    [dict setObject: [NSNumber numberWithInt:0] forKey:@"rotation"];
     
     return dict;
 }
