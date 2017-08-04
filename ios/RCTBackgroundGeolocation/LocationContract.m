@@ -23,6 +23,8 @@
         @{ @"name": @LC_COLUMN_NAME_ALTITUDE, @"type": [SQLColumnType sqlColumnWithType: kReal]},
         @{ @"name": @LC_COLUMN_NAME_LATITUDE, @"type": [SQLColumnType sqlColumnWithType: kReal]},
         @{ @"name": @LC_COLUMN_NAME_LONGITUDE, @"type": [SQLColumnType sqlColumnWithType: kReal]},
+        @{ @"name": @LC_COLUMN_NAME_DELTA_DISTANCE, @"type": [SQLColumnType sqlColumnWithType: kInteger]},
+        @{ @"name": @LC_COLUMN_NAME_DELTA_TIME, @"type": [SQLColumnType sqlColumnWithType: kInteger]},
         @{ @"name": @LC_COLUMN_NAME_PROVIDER, @"type": [SQLColumnType sqlColumnWithType: kText]},
         @{ @"name": @LC_COLUMN_NAME_LOCATION_PROVIDER, @"type": [SQLColumnType sqlColumnWithType: kText]},
         @{ @"name": @LC_COLUMN_NAME_VALID, @"type": [SQLColumnType sqlColumnWithType: kInteger]}

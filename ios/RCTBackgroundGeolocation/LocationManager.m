@@ -38,7 +38,7 @@
 #define LOCATION_RESTRICTED     "Application's use of location services is restricted."
 #define LOCATION_NOT_DETERMINED "User undecided on application's use of location services."
 
-static NSString * const Domain = @"com.marianhello";
+static NSString * const Domain = @"com.stickerwheel";
 
 enum {
     maxLocationWaitTimeInSeconds = 15,
@@ -424,7 +424,7 @@ enum {
             }
 
             NSString *syncUrl = [_config hasSyncUrl] ? _config.syncUrl : _config.url;
-            [uploader sync:syncUrl onLocationThreshold:_config.syncThreshold];
+            [uploader sync:syncUrl onLocationThreshold:_config.syncThreshold withHttpHeaders:_config.httpHeaders];
         });
     }
 
@@ -515,7 +515,7 @@ enum {
 
 
     for (CLLocation *location in locations) {
-        Location *bgloc = [Location fromCLLocation:location];
+        Location *bgloc = [Location fromCLLocation:location lastLocation:lastLocation];
         bgloc.type = @"current";
 
         // test the age of the location measurement to determine if the measurement is cached
