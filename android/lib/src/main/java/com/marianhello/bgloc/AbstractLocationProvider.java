@@ -84,13 +84,15 @@ public abstract class AbstractLocationProvider implements LocationProvider {
      * @param location
      */
     public void handleLocation(Location location) {
-        BackgroundLocation backgroundLocation = new BackgroundLocation(PROVIDER_ID, location);
-        if (lastBackgroundLocation != null && isFreshLocation(lastBackgroundLocation)) {
-            backgroundLocation.setDeltaDistance(getDistance(backgroundLocation, lastBackgroundLocation));
-            backgroundLocation.setDeltaTime(backgroundLocation.getTime()- lastBackgroundLocation.getTime());
+        if(location.getAccuracy()<15) {
+            BackgroundLocation backgroundLocation = new BackgroundLocation(PROVIDER_ID, location);
+            if (lastBackgroundLocation != null && isFreshLocation(lastBackgroundLocation)) {
+                backgroundLocation.setDeltaDistance(getDistance(backgroundLocation, lastBackgroundLocation));
+                backgroundLocation.setDeltaTime(backgroundLocation.getTime() - lastBackgroundLocation.getTime());
+            }
+            locationService.handleLocation(backgroundLocation);
+            lastBackgroundLocation = backgroundLocation;
         }
-        locationService.handleLocation(backgroundLocation);
-        lastBackgroundLocation = backgroundLocation;
     }
 
     private double getDistance(BackgroundLocation loc1, BackgroundLocation loc2) {

@@ -45,7 +45,7 @@ public class BackgroundLocation implements Parcelable {
     private static final SimpleDateFormat sdf;
 
     static{
-        sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.US);
+        sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
@@ -747,9 +747,17 @@ public class BackgroundLocation implements Parcelable {
         json.put("delta_distance", deltaDistance);
         json.put("delta_time", deltaTime);
         if (hasAccuracy) json.put("accuracy", accuracy);
-        if (hasSpeed) json.put("speed", speed);
+        if (hasSpeed){
+            json.put("speed", speed);
+        }else {
+            json.put("speed", -1);
+        }
         if (hasAltitude) json.put("altitude", altitude);
-        if (hasBearing) json.put("bearing", bearing);
+        if (hasBearing) {
+            json.put("rotation", bearing);
+        }else {
+            json.put("rotation", 0);
+        }
 //        if (hasRadius) json.put("radius", radius);
 //        json.put("locationProvider", locationProvider);
 
