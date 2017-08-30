@@ -84,7 +84,6 @@ public abstract class AbstractLocationProvider implements LocationProvider {
      * @param location
      */
     public void handleLocation(Location location) {
-        if(location.getAccuracy()<15) {
             BackgroundLocation backgroundLocation = new BackgroundLocation(PROVIDER_ID, location);
             if (lastBackgroundLocation != null && isFreshLocation(lastBackgroundLocation)) {
                 backgroundLocation.setDeltaDistance(getDistance(backgroundLocation, lastBackgroundLocation));
@@ -92,7 +91,6 @@ public abstract class AbstractLocationProvider implements LocationProvider {
             }
             locationService.handleLocation(backgroundLocation);
             lastBackgroundLocation = backgroundLocation;
-        }
     }
 
     private double getDistance(BackgroundLocation loc1, BackgroundLocation loc2) {

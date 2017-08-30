@@ -236,8 +236,12 @@ public class SQLiteLocationDAO implements LocationDAO {
 
     String whereClause = LocationEntry._ID + " = ?";
     String[] whereArgs = { String.valueOf(locationId) };
+    try{
+         db.update(LocationEntry.TABLE_NAME, values, whereClause, whereArgs);
+    }catch(Exception e){
+        e.printStackTrace();
+    }
 
-    db.update(LocationEntry.TABLE_NAME, values, whereClause, whereArgs);
   }
 
   /**
