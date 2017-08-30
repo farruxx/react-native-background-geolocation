@@ -32,7 +32,11 @@ enum {
     if(lastLocation != nil){
         NSNumber * delta_time2=  [NSNumber numberWithInt: ((long)(NSTimeInterval)([[NSDate date] timeIntervalSince1970])- [lastLocation.time timeIntervalSince1970]) * 1000];
         if(delta_time2.intValue < 5*60*1000){
-            instance.delta_distance = [NSNumber numberWithInt: [instance distanceFromLocation:lastLocation]];
+            NSNumber * delta_distance = [NSNumber numberWithInt: [instance distanceFromLocation:lastLocation]];
+            if(delta_distance.integerValue>10000){
+                delta_distance = 0;
+            }
+            instance.delta_distance = delta_distance;
             instance.delta_time = delta_time2;
         }
     }

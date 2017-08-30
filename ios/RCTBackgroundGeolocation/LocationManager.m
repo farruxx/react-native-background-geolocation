@@ -212,9 +212,9 @@ enum {
         // it's neccessary to start call startUpdatingLocation in iOS < 8.0 to show user prompt!
 
         if (authStatus == kCLAuthorizationStatusNotDetermined) {
-            if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {  //iOS 8.0+
+            if ([locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {  //iOS 8.0+
                 DDLogVerbose(@"LocationManager requestAlwaysAuthorization");
-                [locationManager requestAlwaysAuthorization];
+                [locationManager requestWhenInUseAuthorization];
             }
         }
 #endif
@@ -513,7 +513,7 @@ enum {
         }
     }
 
-
+    Location *newLocation = nil;
     for (CLLocation *location in locations) {
         Location *bgloc = [Location fromCLLocation:location lastLocation:lastLocation];
         bgloc.type = @"current";
@@ -521,34 +521,34 @@ enum {
         // test the age of the location measurement to determine if the measurement is cached
         // in most cases you will not want to rely on cached measurements
         DDLogDebug(@"Location age %f", [bgloc locationAge]);
-        if ([bgloc locationAge] > maxLocationAgeInSeconds || ![bgloc hasAccuracy] || ![bgloc hasTime]) {
+        if ([bgloc locationAge] > maxLocationAgeInSeconds || ![bgloc hasAccuracy] || ![bgloc hasTime] || [bgloc accuracy].integerValue>60) {
             continue;
         }
 
-        if (lastLocation == nil) {
-            lastLocation = bgloc;
+        if (newLocation == nil) {
+            newLocation = bgloc;
             continue;
         }
 
-        if ([bgloc isBetterLocation:lastLocation]) {
+        if ([bgloc isBetterLocation:newLocation]) {
             DDLogInfo(@"Better location found: %@", bgloc);
-            lastLocation = bgloc;
+            newLocation = bgloc;
         }
     }
 
-    if (lastLocation == nil) {
+    if (newLocation == nil) {
         return;
     }
 
     // test the measurement to see if it is more accurate than the previous measurement
     if (isAcquiringStationaryLocation) {
-        DDLogDebug(@"Acquiring stationary location, accuracy: %@", lastLocation.accuracy);
+        DDLogDebug(@"Acquiring stationary location, accuracy: %@", newLocation.accuracy);
         if (_config.isDebugging) {
             AudioServicesPlaySystemSound (acquiringLocationSound);
         }
 
-        if ([lastLocation.accuracy doubleValue] <= [[NSNumber numberWithInteger:_config.desiredAccuracy] doubleValue]) {
-            DDLogDebug(@"LocationManager found most accurate stationary before timeout");
+        if ([newLocation.accuracy doubleValue] <= [[NSNumber numberWithInteger:_config.desiredAccuracy] doubleValue]) {
+            DDLogDebug(@"LocationMa		nager found most accurate stationary before timeout");
         } else if (-[aquireStartTime timeIntervalSinceNow] < maxLocationWaitTimeInSeconds) {
             // we still have time to aquire better location
             return;
@@ -557,7 +557,7 @@ enum {
         isAcquiringStationaryLocation = NO;
         [self stopUpdatingLocation]; //saving power while monitoring region
 
-        Location *stationaryLocation = [lastLocation copy];
+        Location *stationaryLocation = [newLocation copy];
         stationaryLocation.type = @"stationary";
         [self startMonitoringStationaryRegion:stationaryLocation];
         // fire onStationary @event for Javascript.
@@ -567,7 +567,7 @@ enum {
             AudioServicesPlaySystemSound (acquiringLocationSound);
         }
 
-        if ([lastLocation.accuracy doubleValue] <= [[NSNumber numberWithInteger:_config.desiredAccuracy] doubleValue]) {
+        if ([newLocation.accuracy doubleValue] <= [[NSNumber numberWithInteger:_config.desiredAccuracy] doubleValue]) {
             DDLogDebug(@"LocationManager found most accurate location before timeout");
         } else if (-[aquireStartTime timeIntervalSinceNow] < maxLocationWaitTimeInSeconds) {
             // we still have time to aquire better location
@@ -581,25 +581,26 @@ enum {
         // We should have a good sample for speed now, power down our GPS as configured by user.
         isAcquiringSpeed = NO;
         locationManager.desiredAccuracy = _config.desiredAccuracy;
-        locationManager.distanceFilter = [self calculateDistanceFilter:[lastLocation.speed floatValue]];
+        locationManager.distanceFilter = [self calculateDistanceFilter:[newLocation.speed floatValue]];
         [self startUpdatingLocation];
 
     } else if (actAsInMode == FOREGROUND) {
         // Adjust distanceFilter incrementally based upon current speed
-        float newDistanceFilter = [self calculateDistanceFilter:[lastLocation.speed floatValue]];
+        float newDistanceFilter = [self calculateDistanceFilter:[newLocation.speed floatValue]];
         if (newDistanceFilter != locationManager.distanceFilter) {
             DDLogInfo(@"LocationManager updated distanceFilter, new: %f, old: %f", newDistanceFilter, locationManager.distanceFilter);
             locationManager.distanceFilter = newDistanceFilter;
             [self startUpdatingLocation];
         }
-    } else if ([self locationIsBeyondStationaryRegion:lastLocation]) {
+    } else if ([self locationIsBeyondStationaryRegion:newLocation]) {
         if (_config.isDebugging) {
             [self notify:@"Manual stationary exit-detection"];
         }
         [self switchMode:operationMode];
     }
 
-    [self queue:lastLocation];
+    [self queue:newLocation];
+    lastLocation = newLocation;
 }
 
 /**
